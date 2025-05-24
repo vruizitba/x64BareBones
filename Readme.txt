@@ -13,14 +13,15 @@ Execute the following commands on the x64BareBones project directory:
 
   user@linux:$ cd Toolchain
   user@linux:$ make all
-
+make all
 3- Build the Kernel
 
 From the x64BareBones project directory run:
 
   user@linux:$ make all
 
-4- Run the kernel
+4- Run the kernelcode --list-extensions
+
 
 From the x64BareBones project directory run:
 
