@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "naiveconsole.h": "c",
+        "idtloader.h": "c"
+    }
+}

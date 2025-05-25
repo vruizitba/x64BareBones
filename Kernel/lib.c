@@ -1,5 +1,29 @@
 #include <stdint.h>
 
+const char scancodeToChar[128] = {
+    0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
+    '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', 0,
+    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`', 0, '\\', 'z',
+    'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 0, '*', 0, ' ', 0,
+    // ...completa si lo necesitas
+};
+
+
+static int pos = 0;
+
+void process_scancode(unsigned char scancode) {
+    if (scancode & 0x80) // Ignora key release
+        return;
+    char c = scancodeToChar[scancode];
+    if (c) {
+        volatile char *video = (char*)0xB8000;
+        video[pos * 2] = c;
+        video[pos * 2 + 1] = 0x0F;
+        pos++;
+        if (pos >= 80 * 25) pos = 0; // Limita a una pantalla
+    }
+}
+
 void * memset(void * destination, int32_t c, uint64_t length)
 {
 	uint8_t chr = (uint8_t)c;

@@ -1,4 +1,5 @@
 global getTimeRTC
+global kbFlag
 
 section .text
 getTimeRTC:
@@ -22,4 +23,19 @@ getTimeRTC:
     in al, 71h
     mov [rdx], al
 
+    ret
+
+kbFlag:
+    push rbp
+    mov rbp, rsp
+
+.wait_key:
+    in al, 0x64
+    test al, 1
+    jz .wait_key
+
+    in al, 0x60
+
+    mov rsp, rbp
+    pop rbp
     ret
