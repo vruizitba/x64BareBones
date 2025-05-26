@@ -1,4 +1,4 @@
- /*
+/*
  *   interrupts.h
  *
  *  Created on: Apr 18, 2010
@@ -19,7 +19,7 @@ void _irq05Handler(void);
 
 void _exception0Handler(void);
 
-void keyboard_handler();
+void keyboard_handler(void);
 void process_scancode(unsigned char scancode);
 
 

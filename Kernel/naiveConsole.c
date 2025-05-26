@@ -8,6 +8,12 @@ static uint8_t * currentVideo = (uint8_t*)0xB8000;
 static const uint32_t width = 80;
 static const uint32_t height = 25 ;
 
+void ncPrintCharColor(char character, uint8_t color) {
+    *currentVideo = character;
+    *(currentVideo + 1) = color;
+    currentVideo += 2;
+}
+
 void ncPrint(const char * string)
 {
 	int i;

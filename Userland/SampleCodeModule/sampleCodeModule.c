@@ -27,6 +27,9 @@ int main() {
 		return 0xDEADC0DE;
 
 	return 0xDEADBEEF;
+
+	write(1, "Hola mundo\n", 11);    // Imprime en pantalla (STDOUT)
+	write(2, "Error!\n", 7);         // Imprime en rojo (STDERR)
 }
 
 void printStringWithColor(int row, int column, char *string, char attribute) {
@@ -85,4 +88,17 @@ void waitAndPrintKey(int row, int column) {
 
 	printStringWithColor(row + 1, column, "Tecla:", 0x0F);
 	printStringWithColor(row + 1, column + 8, keyStr, 0x0F);
+}
+
+static inline void write(int fd, const char *buffer, int count) {
+    asm volatile (
+        "mov $1, %%rax\n"      // Número de syscall: 1 para write
+        "mov %[fd], %%rbx\n"
+        "mov %[buf], %%rcx\n"
+        "mov %[cnt], %%rdx\n"
+        "int $0x80\n"
+        :
+        : [fd]"r"(fd), [buf]"r"(buffer), [cnt]"r"(count)
+        : "rax", "rbx", "rcx", "rdx"
+    );
 }

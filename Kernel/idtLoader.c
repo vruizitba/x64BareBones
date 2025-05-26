@@ -16,6 +16,8 @@ typedef struct {
 
 #pragma pack(pop)		/* Reestablece la alinceación actual */
 
+extern void _syscallHandler();
+extern void keyboard_handler();
 
 
 DESCR_INT * idt = (DESCR_INT *) 0;	// IDT de 255 entradas
@@ -29,10 +31,12 @@ void load_idt() {
 
   setup_IDT_entry(0x21, (uint64_t)keyboard_handler);  
 
+  setup_IDT_entry(0x80, (uint64_t)&_syscallHandler);
+
 	//Solo interrupcion timer tick habilitadas y teclado
 	picMasterMask(0xFC); 
 	picSlaveMask(0xFF);
-        
+         
 	_sti();
 }
 

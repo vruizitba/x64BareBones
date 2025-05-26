@@ -1,4 +1,9 @@
 #include <stdint.h>
+#include <naiveConsole.h>
+
+#define SYS_WRITE 1
+#define STDOUT 1
+#define STDERR 2
 
 const char scancodeToChar[128] = {
     0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
@@ -23,6 +28,28 @@ void process_scancode(unsigned char scancode) {
         if (pos >= 80 * 25) pos = 0; // Limita a una pantalla
     }
 }
+
+void syscall_dispatcher(uint64_t syscall_number, uint64_t fd, char *buffer, uint64_t count) {
+	switch (syscall_number) { //si quiero puedo agregar mas syscalls
+		case SYS_WRITE:
+			sys_write(fd, buffer, count);
+			break; 
+	}
+	
+}
+
+void sys_write(uint64_t fd, char *buffer, uint64_t count) {
+	uint8_t color = 0x0F; // Blanco por defecto
+	if (fd == STDERR) {
+		color = 0x04; //rojo
+	}
+
+	for (uint16_t i = 0; i < count; i++) {
+		ncPrintCharColor(buffer[i], color);
+	}
+
+}
+
 
 void * memset(void * destination, int32_t c, uint64_t length)
 {
