@@ -11,6 +11,19 @@ char * v = (char*)0xB8000 + 79 * 2;
 static int var1 = 0;
 static int var2 = 0;
 
+static inline void write(int fd, const char *buffer, int count) {
+    __asm__ volatile (
+        "movq $1, %%rax\n"
+        "movq %0, %%rbx\n"
+        "movq %1, %%rcx\n"
+        "movq %2, %%rdx\n"
+        "int $0x80\n"
+        :
+        : "r"((long)fd), "r"(buffer), "r"((long)count)
+        : "rax", "rbx", "rcx", "rdx"
+    );
+}
+
 int main() {
 	//All the following code may be removed 
 	*v = 'X';
@@ -21,6 +34,9 @@ int main() {
 	printCurrentTime(23, 0, 0xF9);
 
 	waitAndPrintKey(21, 0);
+
+	write(1, "Hola mundo", 11);
+
 
 	//Test if BSS is properly set up
 	if (var1 == 0 && var2 == 0)
@@ -90,15 +106,3 @@ void waitAndPrintKey(int row, int column) {
 	printStringWithColor(row + 1, column + 8, keyStr, 0x0F);
 }
 
-static inline void write(int fd, const char *buffer, int count) {
-    asm volatile (
-        "mov $1, %%rax\n"      // Número de syscall: 1 para write
-        "mov %[fd], %%rbx\n"
-        "mov %[buf], %%rcx\n"
-        "mov %[cnt], %%rdx\n"
-        "int $0x80\n"
-        :
-        : [fd]"r"(fd), [buf]"r"(buffer), [cnt]"r"(count)
-        : "rax", "rbx", "rcx", "rdx"
-    );
-}
